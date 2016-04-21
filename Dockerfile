@@ -48,8 +48,7 @@ RUN docker-php-pecl-install \
         memcache \
         uploadprogress
 
-RUN echo "sendmail_path = /usr/sbin/ssmtp -t" > /usr/local/etc/php/conf.d/conf-sendmail.ini
-RUN echo "date.timezone='Europe/Paris'\n" > /usr/local/etc/php/conf.d/conf-date.ini
+ADD ./conf/php-magento.ini /usr/local/etc/php/conf.d/php-magento.ini
 
 RUN cd /usr/local \
     && curl -sS https://getcomposer.org/installer | php \
