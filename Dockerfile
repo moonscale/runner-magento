@@ -2,6 +2,8 @@ FROM php:5.6-apache
 
 ENV DEBCONF_FRONTEND non-interactive
 
+ADD bin/docker-php-pecl-install /usr/local/bin/
+
 RUN apt-get update && apt-get install -y \
         git \
         imagemagick \
@@ -40,11 +42,8 @@ RUN apt-get update && apt-get install -y \
         zip \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
-    && apt-get clean
-
-ADD bin/docker-php-pecl-install /usr/local/bin/
-
-RUN docker-php-pecl-install \
+    && apt-get clean \
+    && docker-php-pecl-install \
         memcache \
         uploadprogress
 
@@ -55,8 +54,11 @@ RUN cd /usr/local \
     && chmod +x /usr/local/composer.phar \
     && ln -s /usr/local/composer.phar /usr/local/bin/composer
 
-RUN a2enmod deflate
-RUN a2enmod expires
-RUN a2enmod headers
-RUN a2enmod mime
-RUN a2enmod rewrite
+RUN wget https://files.magerun.net/n98-magerun.phar -O /usr/local/bin/magerun \
+	&& chmod +x /usr/local/bin/magerun
+
+RUN a2enmod deflate \
+	&& a2enmod expires \
+	&& a2enmod headers \
+	&& a2enmod mime \
+	&& a2enmod rewrite
